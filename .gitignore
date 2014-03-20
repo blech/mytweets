@@ -4,4 +4,8 @@ my_friends_tweets.*
 *.pyc
 config.py
 .DS_Store
+.Python
+/bin/
+/lib/
+/include/
 
