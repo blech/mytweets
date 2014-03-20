@@ -16,12 +16,28 @@ except ImportError:
 # Valid options for TIMELINE or -m, and the corresponding endpoints at twitter.com/statuses/ and the local filenames we use.
 timelines = {
     'user': {
-        'remote': 'user_timeline',
+        'remote': 'statuses/user_timeline',
         'local': 'my_tweets'
     },
     'friends': {
-        'remote': 'friends_timeline',
+        'remote': 'statuses/home_timeline',
         'local': 'my_friends_tweets'
+    },
+    'mentions': {
+        'remote': 'statuses/mentions_timeline',
+        'local': 'mentions'
+    },
+    'direct': {
+        'remote': 'direct_messages',
+        'local': 'direct'
+    },
+    'direct-sent': {
+        'remote': 'direct_messages/sent',
+        'local': 'direct-sent'
+    },
+    'favorites': {
+        'remote': 'favorites/list',
+        'local': 'favourites'
     }
 }
 
@@ -49,7 +65,7 @@ else:
     except ImportError:
         pass
 try:
-    REMOTE_TIMELINE = "http://twitter.com/statuses/%s.json" % timelines[TIMELINE]['remote']
+    REMOTE_TIMELINE = "https://api.twitter.com/1.1/%s.json" % timelines[TIMELINE]['remote']
 except KeyError:
     print "Invalid timeline: ", TIMELINE
     sys.exit(1)
@@ -191,8 +207,8 @@ def fetch_all(since_id = None):
 
         page += 1
         tweets = json.loads(content)
-        if 'error' in tweets:
-            raise ValueError, tweets['error']
+        if 'errors' in tweets:
+            raise ValueError, tweets['errors'][0]['message'] + ' (code ' + str(tweets['errors'][0]['code']) + ')'
         if not tweets:
             break
         for tweet in tweets:
