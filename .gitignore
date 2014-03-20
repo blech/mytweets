@@ -3,4 +3,5 @@ my_friends_tweets.*
 *.json
 *.pyc
 config.py
+.DS_Store
 
